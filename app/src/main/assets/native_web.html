@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        Hybrid Test Page
+    </title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+			button{ margin-top:5px; }
+
+
+
+    </style>
+    <script type="text/javascript" src="js/jquery.mini.js">
+    </script>
+    <script type="text/javascript" src="js/hybrid.js">
+    </script>
+    <script type="text/javascript" src="js/bootstrap.min.js">
+    </script>
+    <script type="text/javascript">
+
+			function showElement(str) {
+			    var element = $('.form-horizontal');
+			    element.empty();
+				var content = '<div class="alert alert-success" role="alert">' + str + '</div>';
+				element.append(content);
+			}
+
+			function initButtonClick() {
+				/* Begin --- events from web to app */
+
+				$("#closePage").on("click",
+				function() {
+					Hybrid.send("closePage", {
+					    msg: " are you sure to close page ? "
+					},
+					function(entity) {
+					    showElement(JSON.stringify(entity));
+					});
+				});
+
+				$("#takePicture").on("click",
+				function() {
+					Hybrid.send("takePicture", {
+						fileSize: 600,
+						quality: 90,
+						hint: " please take a photo "
+					},
+					function(entity) {
+						if (entity.code == 0) {
+							showElement('takePicture success');
+						} else {
+							showElement(JSON.stringify(entity));
+						}
+
+						if (entity.img != "") {
+							var image = document.getElementById('showImg');
+							image.src = "data:image/jpeg;base64," + entity.img;
+						}
+					});
+				});
+
+				$("#getNetworkInfo").on("click",
+				function() {
+					Hybrid.send("getNetworkInfo", {
+						hint: "try to get network information"
+					},
+					function(entity) {
+					    showElement(JSON.stringify(entity));
+					});
+				});
+
+				/* End --- events from web to app */
+
+				/* Begin --- events from app to web */
+
+				Hybrid.on("notify",
+				function(entity,complete) {
+					showElement(JSON.stringify(entity));
+					// just a test for async complete
+					setTimeout(function(){
+					complete({
+						status: 200,
+						msg: "get notification successfully"
+					});}, 3000);
+				});
+
+				/* End --- events from app to web */
+
+				$("#clear-result").on("click",
+				function() {
+					$('.form-horizontal').empty();
+					$("#showImg").removeAttr("src");
+				});
+			}
+
+			$(document).ready(function() {
+				initButtonClick();
+			});
+
+    </script>
+</head>
+
+<body role="document">
+<div class="container" role="main">
+
+    <div class="page-header">
+        <h3>
+            Actions
+        </h3>
+    </div>
+
+    <button id="closePage" type="button" class="btn btn-primary">
+        closePage
+    </button>
+    <button id="takePicture" type="button" class="btn btn-primary">
+        takePicture
+    </button>
+    <button id="getNetworkInfo" type="button" class="btn btn-primary">
+        getNetworkInfo
+    </button>
+
+    <div class="page-header">
+        <button id="clear-result" type="button" class="btn btn-success">
+            Clear Action Result
+        </button>
+    </div>
+
+    <div class="form-horizontal">
+        <div class="alert alert-success" role="alert">
+            result for init show
+        </div>
+    </div>
+    <img id="showImg"/>
+
+</div>
+</body>
+</html>

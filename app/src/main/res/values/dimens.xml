@@ -1,0 +1,6 @@
+<resources>
+    <dimen name="super_toast_radius">4dp</dimen>
+    <dimen name="super_toast_padding">15dp</dimen>
+    <dimen name="fail_load_data_top_margin">130dp</dimen>
+    <dimen name="common_font_size_1080p_42px">14sp</dimen>
+</resources>
