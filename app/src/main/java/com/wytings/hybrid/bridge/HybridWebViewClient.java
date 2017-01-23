@@ -49,9 +49,14 @@ public class HybridWebViewClient extends WebViewClient {
         return coreHybrid.shouldProcessHybrid(view, url);
     }
 
+    /**
+     * in some Android versions like 4.3, onLoadResource will be invoked instead of shouldOverrideUrlLoading
+     * @param view
+     * @param url
+     */
     @Override
     public void onLoadResource(WebView view, String url) {
-        super.onLoadResource(view, url);
+        coreHybrid.shouldProcessHybrid(view, url);
     }
 
     @Override
