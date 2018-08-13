@@ -16,28 +16,23 @@ import com.wytings.hybrid.utils.Logs;
  * Created by rex.wei on 2016/8/30.
  */
 public class HybridWebView extends WebView {
-    private WebViewListener webViewListener;
-    private HybridWebViewClient hybridWebViewClient;
+    private WebChromeListener webChromeListener;
+    private final HybridWebViewClient hybridWebViewClient;
 
 
     public HybridWebView(Context context) {
-        super(context);
-        initialize();
+        this(context, null);
     }
 
     public HybridWebView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        initialize();
-    }
-
-    public HybridWebView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        initialize();
+        this(context, attrs, android.R.attr.webViewStyle);
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private void initialize() {
-        WebSettings settings = getSettings();
+    public HybridWebView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+
+        final WebSettings settings = getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setAllowFileAccess(true);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -58,19 +53,12 @@ public class HybridWebView extends WebView {
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
                 Logs.i(" onReceivedTitle -> " + title);
-                if (webViewListener != null && !TextUtils.isEmpty(title) && !title.startsWith("http")) {
-                    webViewListener.onReceivedTitle(HybridWebView.this, title);
+                if (webChromeListener != null && !TextUtils.isEmpty(title) && !title.startsWith("http")) {
+                    webChromeListener.onReceivedTitle(HybridWebView.this, title);
                 }
             }
         });
-    }
 
-    public boolean isErrorWeb() {
-        return hybridWebViewClient.isErrorWeb();
-    }
-
-    public boolean isLoaded() {
-        return !TextUtils.isEmpty(getOriginalUrl());
     }
 
     public void send(String type, String data, CallbackListener callback) {
@@ -83,8 +71,13 @@ public class HybridWebView extends WebView {
     }
 
 
-    public void setWebViewListener(WebViewListener listener) {
-        this.webViewListener = listener;
+    public void setWebChromeListener(WebChromeListener listener) {
+        this.webChromeListener = listener;
+    }
+
+
+    public void setWebClientListener(WebClientListener webClientListener) {
+        this.hybridWebViewClient.setWebClientListener(webClientListener);
     }
 
 }

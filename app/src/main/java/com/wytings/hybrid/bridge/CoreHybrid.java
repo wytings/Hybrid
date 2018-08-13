@@ -1,9 +1,8 @@
 package com.wytings.hybrid.bridge;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
-import android.text.TextUtils;
-import android.util.SparseArray;
 import android.webkit.WebView;
 
 import com.wytings.hybrid.utils.Logs;
@@ -23,7 +22,8 @@ public class CoreHybrid {
 
     private int actionIndex = 0;
     private Map<String, ActionHandler> handlerMap = new HashMap<>(20);
-    private SparseArray<CallbackListener> callbacks = new SparseArray<>(20);
+    @SuppressLint("UseSparseArrays")
+    private HashMap<Integer, CallbackListener> callbacks = new HashMap<>();
 
     public boolean shouldProcessHybrid(WebView view, String url) {
         try {
@@ -107,7 +107,7 @@ public class CoreHybrid {
     }
 
     public void send(WebView webView, String type, String json, CallbackListener listener) {
-        int actionId = actionIndex;
+        final int actionId = actionIndex;
 
         if (listener != null) {
             callbacks.put(actionId, listener);

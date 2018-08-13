@@ -11,13 +11,13 @@ import com.wytings.hybrid.utils.ViewReplaceHelper;
  * Created by rex on 12/30/16.
  */
 
-public class HybridWebViewClient extends WebViewClient {
+class HybridWebViewClient extends WebViewClient {
     private boolean isErrorWeb = false;
-    private WebViewListener listener = new WebViewListener();
+    private WebClientListener webClientListener;
     private ViewReplaceHelper replaceHelper;
     private final CoreHybrid coreHybrid;
 
-    public HybridWebViewClient(CoreHybrid coreHybrid) {
+    HybridWebViewClient(CoreHybrid coreHybrid) {
         this.coreHybrid = coreHybrid;
     }
 
@@ -25,10 +25,8 @@ public class HybridWebViewClient extends WebViewClient {
         return coreHybrid;
     }
 
-    public void setWebViewListener(WebViewListener listener) {
-        if (listener != null) {
-            this.listener = listener;
-        }
+    public void setWebClientListener(WebClientListener webClientListener) {
+        this.webClientListener = webClientListener;
     }
 
     private void initReplaceHelper(final WebView view) {
@@ -51,8 +49,6 @@ public class HybridWebViewClient extends WebViewClient {
 
     /**
      * in some Android versions like 4.3, onLoadResource will be invoked instead of shouldOverrideUrlLoading
-     * @param view
-     * @param url
      */
     @Override
     public void onLoadResource(WebView view, String url) {
@@ -64,7 +60,7 @@ public class HybridWebViewClient extends WebViewClient {
         super.onReceivedError(view, errorCode, description, failingUrl);
         if (errorCode < 0) {
             replaceHelper.replace(view);
-            listener.onFailLoaded(view);
+            webClientListener.onFailLoaded(view);
         }
         isErrorWeb = true;
     }
@@ -75,7 +71,7 @@ public class HybridWebViewClient extends WebViewClient {
         super.onPageFinished(view, url);
         if (!isErrorWeb) {
             replaceHelper.restore();
-            listener.onSuccessLoaded(view);
+            webClientListener.onSuccessLoaded(view);
         }
     }
 
@@ -86,7 +82,4 @@ public class HybridWebViewClient extends WebViewClient {
         initReplaceHelper(view);
     }
 
-    public boolean isErrorWeb() {
-        return isErrorWeb;
-    }
 }

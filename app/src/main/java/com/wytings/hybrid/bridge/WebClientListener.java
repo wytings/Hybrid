@@ -6,7 +6,7 @@ import android.webkit.WebView;
  * Created by rex on 12/31/16.
  */
 
-public class WebViewListener {
+public class WebClientListener {
     public void onReceivedTitle(WebView view, String title) {
     }
 
