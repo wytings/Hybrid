@@ -11,4 +11,7 @@ public class WebChromeListener {
 
     public void onReceivedTitle(WebView view, String title) {
     }
+
+    public void onProgressChanged(WebView view, int newProgress) {
+    }
 }

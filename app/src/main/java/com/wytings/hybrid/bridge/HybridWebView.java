@@ -50,6 +50,13 @@ public class HybridWebView extends WebView {
         setWebChromeClient(new WebChromeClient() {
 
             @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                if (webChromeListener != null) {
+                    webChromeListener.onProgressChanged(view, newProgress);
+                }
+            }
+
+            @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
                 Logs.i(" onReceivedTitle -> " + title);

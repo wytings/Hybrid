@@ -7,18 +7,10 @@ import android.webkit.WebView;
  */
 
 public class WebClientListener {
-    public void onReceivedTitle(WebView view, String title) {
-    }
 
     public void onFailLoaded(WebView view) {
     }
 
     public void onSuccessLoaded(WebView view) {
-    }
-
-    public void onProgressChanged(WebView view, int newProgress) {
-    }
-
-    public void onPageChanged(WebView view, String currentUrl) {
     }
 }
